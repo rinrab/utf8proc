@@ -23,7 +23,7 @@ add_library (utf8proc
 )
 
 # expose header path, for when this is part of a larger cmake project
-target_include_directories(utf8proc PUBLIC .)
+target_include_directories(utf8proc PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
 
 if (BUILD_SHARED_LIBS)
   # Building shared library
@@ -54,12 +54,14 @@ if (UTF8PROC_INSTALL)
   include(GNUInstallDirs)
   install(FILES utf8proc.h DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
   install(TARGETS utf8proc
+    EXPORT utf8proc-config
     ARCHIVE DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
     RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_BINDIR}"
   )
   configure_file(libutf8proc.pc.cmakein libutf8proc.pc @ONLY)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libutf8proc.pc" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")
+  install(EXPORT utf8proc-config DESTINATION lib/cmake/utf8proc)
 endif()
 
 if(UTF8PROC_ENABLE_TESTING)
